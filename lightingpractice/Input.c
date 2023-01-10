@@ -1,6 +1,7 @@
 #include "Input.h"
 #include "Camera.h"
 #include "Time.h"
+#include "Monitor.h"
 
 GLFWwindow *getWindow(void); // window handle function proto
 Camera_t *getCamera(void);
@@ -125,5 +126,10 @@ static void keycallback(GLFWwindow *window, int key, int scancode, int action, i
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 	{
 		glfwSetWindowShouldClose(getWindow(), GLFW_TRUE);
+	}
+
+	if (key == GLFW_KEY_F11 && action == GLFW_PRESS)
+	{
+		monitor_fullscreen_toggle();
 	}
 }
