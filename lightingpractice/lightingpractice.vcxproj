@@ -147,6 +147,7 @@
     <ClCompile Include="glad.c" />
     <ClCompile Include="Input.c" />
     <ClCompile Include="Main.c" />
+    <ClCompile Include="Monitor.c" />
     <ClCompile Include="Plane.c" />
     <ClCompile Include="Shader.c" />
     <ClCompile Include="Texture.c" />
@@ -156,6 +157,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Cube.h" />
     <ClInclude Include="Input.h" />
+    <ClInclude Include="Monitor.h" />
     <ClInclude Include="Plane.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="stb_image.h" />

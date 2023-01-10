@@ -12,6 +12,7 @@ typedef struct Plane
 	vec3 scale;
 	vec3 axis;
 	mat4 transform;
+	mat3 normal_mtx;
 
 	float angle;
 

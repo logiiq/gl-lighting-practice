@@ -112,6 +112,17 @@ void shader_init(Shader_t *shader)
 	glUseProgram(GL_NONE);
 }
 
+void shader_viewport_recalc(Shader_t *shader)
+{
+	// reset proj shader to identity before recalculating
+	glm_mat4_identity(shader->proj);
+	glm_perspective(degToRad(90.0f), 16.0f / 9.0f, 0.001f, 100.0f, shader->proj);
+
+	glUseProgram(shader->id);
+	shader_mul(shader);
+	glUseProgram(GL_NONE);
+}
+
 /**
 * @brief Premultiply all matrixes and send them to the shader program
 * @out Shader_t The shader whose matrices to premultiply
@@ -159,6 +170,12 @@ void shader_uniform3fv(const Shader_t *shader, const vec3 *vec, const char *unif
 {
 	int loc = glGetUniformLocation(shader->id, uniform);
 	glUniform3fv(loc, 3, vec);
+}
+
+void shader_uniform_mat3fv(const Shader_t *shader, mat4 *matrix, const char *uniform)
+{
+	int loc = glGetUniformLocation(shader->id, uniform);
+	glUniformMatrix3fv(loc, 1, GL_FALSE, matrix);
 }
 
 void shader_uniform_mat4fv(const Shader_t *shader, mat4 *matrix, const char *uniform)

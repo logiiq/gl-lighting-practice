@@ -12,6 +12,7 @@ typedef struct Cube
 	// Cube position
 	vec3 position;
 	mat4 transform;
+	mat4 normal_mtx;
 	vec3 scale;
 	vec3 axis;
 	float angle;

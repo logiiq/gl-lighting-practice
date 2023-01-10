@@ -4,6 +4,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include "Monitor.h"
 #include "Input.h"
 #include "Shader.h"
 #include "Camera.h"
@@ -23,6 +24,10 @@ Shader_t lightingShader;
 Plane_t groundPlane;
 Plane_t roofPlane;
 
+Plane_t wall1;
+Plane_t wall2;
+Plane_t wall3;
+Plane_t wall4;
 
 Cube_t cube;
 Cube_t cube2;
@@ -37,12 +42,33 @@ void init_world(void)
 	texture_t lanternOn = texture_new("texture/lanterncleannc.png", GL_TRUE, GL_RGBA);
 	texture_t lanternOff = texture_new("texture/lanterncleanoff.png", GL_TRUE, GL_RGBA);
 	texture_t wood = texture_new("texture/wood.png", GL_TRUE, GL_RGBA);
+	texture_t stone = texture_new("texture/stone.png", GL_TRUE, GL_RGBA);
+
+	wall1 = plane_new(-10.0f, 0.0f, 0.0f, 20.0f);
+	wall1.axis[2] = 1.0f;
+	wall1.angle = -90.0f;
+	wall1.texture = wood;
+
+	wall2 = plane_new(10.0f, 0.0f, 0.0f, 20.0f);
+	wall2.axis[2] = 1.0f;
+	wall2.angle = 90.0f;
+	wall2.texture = wood;
+
+	wall3 = plane_new(0.0f, 0.0f, -10.0f, 20.0f);
+	wall3.axis[0] = 1.0f;
+	wall3.angle = 90.0f;
+	wall3.texture = wood;
+
+	wall4 = plane_new(0.0f, 0.0f, 10.0f, 20.0f);
+	wall4.axis[0] = 1.0f;
+	wall4.angle = -90.0f;
+	wall4.texture = wood;
 
 	// Load objects
 	groundPlane = plane_new(0.0f, -0.5f, 0.0f, 20.0f);
 
 	roofPlane = plane_new(0.0f, 5.5f, 0.0f, 20.0f);
-	roofPlane.texture = wood;
+	roofPlane.texture = stone;
 	roofPlane.axis[0] = 1.0f;
 	roofPlane.angle = 180.0f;
 
@@ -58,7 +84,7 @@ float spd = 0.001f;
 
 void draw_world(void)
 {
-	//lightPos[0] += spd;
+	lightPos[0] += spd;
 	
 	if (lightPos[0] >= 10.0f || lightPos[0] <= -10.0)
 	{
@@ -83,6 +109,10 @@ void draw_world(void)
 	// Draw objects
 	plane_draw(&groundPlane, &lightingShader);
 	plane_draw(&roofPlane, &lightingShader);
+	plane_draw(&wall1, &lightingShader);
+	plane_draw(&wall2, &lightingShader);
+	plane_draw(&wall3, &lightingShader);
+	plane_draw(&wall4, &lightingShader);
 
 	cube_draw(&cube, &testShader);
 	cube_draw(&cube2, &lightingShader);
@@ -123,7 +153,7 @@ void init(void)
 	testShader = shader_new("shader/vertex.glsl", "shader/fragment.glsl");
 	lightingShader = shader_new("shader/lighting/vertex.glsl", "shader/lighting/fragment.glsl");
 	
-	
+	monitor_init();
 	input_init();
 	camera = camera_new(0.0f, 1.0f, 3.0f, 0.0f, -90.0f);
 
@@ -213,10 +243,19 @@ int main(void)
 	cleanup();
 	return 0;
 }
-
+/*
 const Shader_t *getShader(void)
 {
 	return &testShader;
+}
+*/
+
+const Shader_t *getAllShaders(void)
+{
+	Shader_t *s[] = {
+		&testShader, &lightingShader
+	};
+	return s;
 }
 
 GLFWwindow *getWindow(void)

@@ -28,7 +28,7 @@ void main()
     float att = 1.0f / (1.0f + 0.09 * lightDistance + 0.032 * (lightDistance * lightDistance));
 
     float diff = max(dot(norm, lightDir), 0.0f);
-    vec3 diffuse = (diff * lightColour1);
+    vec3 diffuse = (diff * lightColour);
     diffuse *= att;
 
     vec3 ambient = ambientStrength * lightColour;

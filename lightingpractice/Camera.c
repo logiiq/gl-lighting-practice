@@ -2,7 +2,6 @@
 #include <math.h>
 #include <corecrt_math_defines.h>
 
-const Shader_t *getShader(void);
 const float *get_m_off(void);
 
 static vec3 worldUp = {

@@ -14,12 +14,13 @@ out vec3 vp;
 uniform mat4 finalMat;
 uniform mat4 model;
 uniform vec3 viewPos;
+uniform mat3 normal_mtx;
 
 void main()
 {
     gl_Position = finalMat * vec4(vertexPos, 1.0f);
     fragPos = vec3(model * vec4(vertexPos, 1.0f));
-    normPos = vec3(vec4(normalPos, 0.0f) * model);
+    normPos = normal_mtx * normalPos;
     vp = viewPos;
 
     texPos = texturePos;
