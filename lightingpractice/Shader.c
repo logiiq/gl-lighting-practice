@@ -1,6 +1,7 @@
 #include "Shader.h"
 
 #include <glad/glad.h>
+#include <GLFW/glfw3.h>
 
 static char *buf; // buffer to store strings before compiling shaders
 
@@ -8,8 +9,27 @@ static char *buf; // buffer to store strings before compiling shaders
 static void checkShader(unsigned int shader);
 const char *getStringFromFile(const char *file_path);
 const unsigned int filelen(FILE *file);
+GLFWwindow *getWindow(void);
 
-// TODO: shader_t -> Shader_t, needs to be a struct to store the transformations of each matrix
+Shader_t **shaders;
+static unsigned int num_shaders = 0;
+
+/**
+* @brief getAllShaders will return an array of the memory addresses of all the currently
+* created shaders, dereference them in to access contents of each shader
+* @param[out] *nr_shaders The integer where the number of shaders will be stored
+*/
+Shader_t **shader_get_all(unsigned int *nr_shaders)
+{
+	*nr_shaders = num_shaders;
+	return shaders;
+}
+
+void shader_free(void)
+{
+	printf("successfully freed shaders\n");
+	free(shaders);
+}
 
 // Create a new shader with vertex shader at vpath and fragment shader at fpath
 Shader_t shader_new(const char *vpath, const char *fpath)
@@ -68,33 +88,61 @@ Shader_t shader_new(const char *vpath, const char *fpath)
 	buf = NULL;
 
 	tmp.id = id;
-	shader_init(&tmp);
-
-	int numUniforms;
-	glGetProgramiv(id, GL_ACTIVE_UNIFORMS, &numUniforms);
-
-	char buf[256];
-	int size = 0;
-	unsigned int type = 0;
-
-	/*
-	printf("Program %d created, detected uniforms:\n", id);
-	for (unsigned int i = 0; i < numUniforms; i++)
-	{
-		glGetActiveUniform(id, i, 256, NULL, &size, &type, &buf);
-		printf("Uniform %d Type: %d Name: %s\n", i, type, &buf);
-	}
-	printf("\n\n");
-	*/
 
 	glUseProgram(GL_NONE);
 
+	num_shaders++;
+
+	if (!shaders)
+	{
+		shaders = malloc(sizeof(Shader_t *));
+		if (shaders)
+		{
+			shaders[0] = NULL;	
+		}
+		else
+		{
+			printf("ERROR: Unable to malloc for shaders\n");
+			free(shaders);
+			shaders = NULL;
+		}
+	}
+	else
+	{
+		shaders = realloc(shaders, num_shaders * sizeof(Shader_t *));
+		if (shaders)
+		{
+			shaders[num_shaders - 1] = NULL;
+		}
+		else
+		{
+			printf("ERROR: Unable to realloc for shader reference array\n");
+			free(shaders);
+			shaders = NULL;
+		}
+	}
+	
 	return tmp;
 }
 
 static float degToRad(float f)
 {
 	return f * (float)M_PI / 180.0f;
+}
+
+void shader_viewport_calc(Shader_t *shader)
+{
+	int width;
+	int height;
+	glfwGetWindowSize(getWindow(), &width, &height);
+
+	float aspect = (float)width / (float)height;
+
+	glm_perspective(degToRad(90.0f), aspect, 0.001f, 100.0f, shader->proj);
+
+	glUseProgram(shader->id);
+	shader_mul(shader);
+	glUseProgram(GL_NONE);
 }
 
 void shader_init(Shader_t *shader)
@@ -104,28 +152,21 @@ void shader_init(Shader_t *shader)
 	glm_mat4_identity(shader->view);
 	glm_mat4_identity(shader->model);
 	
-	// Do transformations
-	glm_perspective(degToRad(90.0f), 16.0f / 9.0f, 0.001f, 100.0f, shader->proj);
-	
-	glUseProgram(shader->id);
-	shader_mul(shader);
-	glUseProgram(GL_NONE);
-}
+	shader_viewport_calc(shader);
 
-void shader_viewport_recalc(Shader_t *shader)
-{
-	// reset proj shader to identity before recalculating
-	glm_mat4_identity(shader->proj);
-	glm_perspective(degToRad(90.0f), 16.0f / 9.0f, 0.001f, 100.0f, shader->proj);
-
-	glUseProgram(shader->id);
-	shader_mul(shader);
-	glUseProgram(GL_NONE);
+	// add reference to reference array
+	for (unsigned int i = 0; i < num_shaders; i++)
+	{
+		if (shaders[i] == NULL)
+		{
+			shaders[i] = shader;
+		}
+	}
 }
 
 /**
 * @brief Premultiply all matrixes and send them to the shader program
-* @out Shader_t The shader whose matrices to premultiply
+* @param Shader_t The shader whose matrices to premultiply
 */
 void shader_mul(Shader_t *shader)
 {	
@@ -265,3 +306,7 @@ inline const unsigned int filelen(FILE *file)
 	return tmp;
 }
 
+const int shader_num_shaders(void)
+{
+	return num_shaders;
+}

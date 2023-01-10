@@ -148,11 +148,14 @@ void init(void)
 
 	glViewport(0, 0, 1920, 1080);
 	glEnable(GL_DEPTH_TEST);
-	//glEnable(GL_CULL_FACE);
-	
+	glEnable(GL_CULL_FACE);
+
 	testShader = shader_new("shader/vertex.glsl", "shader/fragment.glsl");
+	shader_init(&testShader);
+
 	lightingShader = shader_new("shader/lighting/vertex.glsl", "shader/lighting/fragment.glsl");
-	
+	shader_init(&lightingShader);
+
 	monitor_init();
 	input_init();
 	camera = camera_new(0.0f, 1.0f, 3.0f, 0.0f, -90.0f);
@@ -220,7 +223,7 @@ void loop(void)
 		// Poll FPS
 		if (polltime >= 1.0f)
 		{
-			printf("(DEBUG) FPS: %d\n", fps);
+			//printf("(DEBUG) FPS: %d\n", fps);
 			fps = 0;
 			polltime = 0.0f;
 		}
@@ -232,6 +235,7 @@ void loop(void)
 
 void cleanup(void)
 {
+	shader_free();
 	glfwDestroyWindow(window);
 	glfwTerminate();
 }
@@ -242,20 +246,6 @@ int main(void)
 	loop();
 	cleanup();
 	return 0;
-}
-/*
-const Shader_t *getShader(void)
-{
-	return &testShader;
-}
-*/
-
-const Shader_t *getAllShaders(void)
-{
-	Shader_t *s[] = {
-		&testShader, &lightingShader
-	};
-	return s;
 }
 
 GLFWwindow *getWindow(void)

@@ -10,7 +10,6 @@
 typedef struct Shader
 {
 	unsigned int id;
-
 	mat4 proj;
 	mat4 view;
 	mat4 model;
@@ -18,7 +17,13 @@ typedef struct Shader
 	mat4 f_matrix;
 } Shader_t;
 
+Shader_t **shader_get_all(unsigned int *nr_shaders);
+
+void shader_free(void);
+
 Shader_t shader_new(const char *vpath, const char *fpath);
+
+void shader_viewport_calc(Shader_t *shader);
 
 void shader_init(Shader_t *shader);
 
@@ -41,5 +46,7 @@ void shader_uniform3fv(const Shader_t *shader, const vec3 *vec, const char *unif
 void shader_uniform_mat3fv(const Shader_t *shader, mat4 *matrix, const char *uniform);
 
 void shader_uniform_mat4fv(const Shader_t *shader, mat4 *matrix, const char *uniform);
+
+const int shader_num_shaders(void);
 
 #endif
