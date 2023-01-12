@@ -87,7 +87,6 @@ void cube_set_scale(Cube_t *cube, float scalar)
 
 void cube_transform(const Cube_t *cube, Shader_t *shader)
 {
-	vec3 axis = { 0.0f, 1.0f, 0.0f };
 	glm_translate(cube->transform, cube->position);
 	glm_rotate(cube->transform, glm_rad(cube->angle), cube->axis);
 	glm_scale(cube->transform, cube->scale);
