@@ -37,6 +37,8 @@ void shader_set_view(Shader_t *shader, mat4 *v);
 
 void shader_set_model(Shader_t *shader, mat4 *m);
 
+void shader_uniform1i(const Shader_t *shader, int val, const char *uniform);
+
 void shader_uniform1f(const Shader_t *shader, float val, const char *uniform);
 
 void shader_uniform3f(const Shader_t *shader, float v0, float v1, float v2, const char *uniform);

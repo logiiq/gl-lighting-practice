@@ -88,9 +88,8 @@ void draw_world(void)
 	{
 		spd = -spd;
 	}
-	lightPos[0] += spd;
-	
-	lightPos[1] = 2.0f * sinf(0.5f * glfwGetTime()) + 2.5f;
+	//lightPos[0] += spd;
+	//lightPos[1] = 2.0f * sinf(0.5f * glfwGetTime()) + 2.5f;
 	//lightPos[2] += 0.001f;
 
 	cube.position[0] = lightPos[0];
@@ -167,7 +166,7 @@ void init(void)
 
 void loop(void)
 {
-	char dayNight = 1;
+	char dayNight = 0;
 	float lightValue = 0.5f;
 	float currentLightValue = 0.0f;
 	vec3 bgColor = { 0.0f, 0.3f, 0.5f };
@@ -192,7 +191,7 @@ void loop(void)
 		// Calculate day/night cycle
 		if (dayNight)
 		{
-			float mul = 0.2f * sinf(0.5f * glfwGetTime()) + 0.5f;
+			float mul = 0.5f * sinf(1.5f * glfwGetTime()) + 0.5f;
 			currentColor[0] = bgColor[0] * mul;
 			currentColor[1] = bgColor[1] * mul;
 			currentColor[2] = bgColor[2] * mul;

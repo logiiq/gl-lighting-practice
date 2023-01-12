@@ -1,6 +1,6 @@
 #include "Camera.h"
 #include <math.h>
-#include <corecrt_math_defines.h>
+//#include <corecrt_math_defines.h>
 
 const float *get_m_off(void);
 

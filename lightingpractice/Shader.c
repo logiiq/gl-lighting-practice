@@ -194,6 +194,12 @@ void shader_set_model(Shader_t *shader, mat4 *m)
 	glm_mat4_copy(m, shader->model);
 }
 
+void shader_uniform1i(const Shader_t *shader, int val, const char *uniform)
+{
+	int loc = glGetUniformLocation(shader->id, uniform);
+	glUniform1i(loc, val);
+}
+
 void shader_uniform1f(const Shader_t *shader, float val, const char *uniform)
 {
 	int loc = glGetUniformLocation(shader->id, uniform);
