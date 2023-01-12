@@ -72,6 +72,7 @@ void camera_update(Camera_t *cam, Shader_t *shader)
 
 	glm_lookat(cam->position, &d, cam->up, shader->view);
 	shader_uniform3f(shader, cam->position[0], cam->position[1], cam->position[2], "viewPos");
+	shader_uniform_mat4fv(shader, shader->view, "view");
 
 	shader_mul(shader);
 	shader_usei(0);

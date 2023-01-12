@@ -9,8 +9,12 @@
 
 const Camera_t *getCamera(void);
 
-static void calc_norm_matrix(Cube_t *cube)
+static void calc_norm_matrix(Cube_t *cube, Shader_t *shader)
 {
+	// modelview (mul view and model mtxs to get viewspace positions of normals)
+	mat4 vm;
+	glm_mat4_mul(shader->view, cube->transform, &vm);
+
 	// transpose of the inverse of the upper-left 3x3 of the model matrix
 	mat3 norm;
 	glm_mat4_pick3(cube->transform, &norm); // put upper left into norm mtx
@@ -70,7 +74,6 @@ Cube_t cube_new(float x, float y, float z)
 	tmp.texture = 0;
 	tmp.VAO = VAO;
 	glm_mat4_copy(&transform, &tmp.transform);
-	calc_norm_matrix(&tmp);
 
 	return tmp;
 }
@@ -89,7 +92,7 @@ void cube_transform(const Cube_t *cube, Shader_t *shader)
 	glm_rotate(cube->transform, glm_rad(cube->angle), cube->axis);
 	glm_scale(cube->transform, cube->scale);
 
-	calc_norm_matrix(cube);
+	calc_norm_matrix(cube, shader);
 	shader_set_model(shader, cube->transform);
 	shader_uniform_mat4fv(shader, cube->transform, "model");
 	shader_uniform_mat3fv(shader, cube->normal_mtx, "normal_mtx");

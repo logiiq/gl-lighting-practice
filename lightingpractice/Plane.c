@@ -3,11 +3,15 @@
 #include <glad/glad.h>
 #include <cglm/cglm.h>
 
-static void calc_norm_matrix(Plane_t *plane)
+static void calc_norm_matrix(Plane_t *plane, Shader_t *shader)
 {
+	// modelview (mul view and model mtxs to get viewspace positions of normals)
+	mat4 vm;
+	glm_mat4_mul(shader->view, plane->transform, &vm);
+
 	// transpose of the inverse of the upper-left 3x3 of the model matrix
 	mat3 norm;
-	glm_mat4_pick3(plane->transform, &norm); // put upper left into norm mtx
+	glm_mat4_pick3(&vm, &norm); // put upper left into norm mtx
 	glm_mat3_inv(&norm, &norm);
 	glm_mat3_transpose(&norm);
 	glm_mat3_copy(&norm, plane->normal_mtx);
@@ -71,7 +75,6 @@ Plane_t plane_new(float x, float y, float z, float scale)
 	tmp.angle = 0.0f;
 	tmp.VAO = VAO;
 	tmp.texture = tex;
-	calc_norm_matrix(&tmp);
 	glm_mat4_copy(&transform, &tmp.transform);
 
 	return tmp;
@@ -83,7 +86,7 @@ void plane_transform(const Plane_t *plane, const Shader_t *shader)
 	glm_rotate(plane->transform, glm_rad(plane->angle), plane->axis);
 	glm_scale(plane->transform, plane->scale);
 
-	calc_norm_matrix(plane);
+	calc_norm_matrix(plane, shader);
 	shader_set_model(shader, plane->transform);
 	shader_uniform_mat4fv(shader, plane->transform, "model");
 	shader_uniform_mat3fv(shader, plane->normal_mtx, "normal_mtx");

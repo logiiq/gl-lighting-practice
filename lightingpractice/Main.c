@@ -84,14 +84,13 @@ float spd = 0.001f;
 
 void draw_world(void)
 {
-	lightPos[0] += spd;
-	
 	if (lightPos[0] >= 10.0f || lightPos[0] <= -10.0)
 	{
 		spd = -spd;
 	}
+	lightPos[0] += spd;
 	
-	//lightPos[1] = 2.0f * sinf(0.5f * glfwGetTime()) + 2.5f;
+	lightPos[1] = 2.0f * sinf(0.5f * glfwGetTime()) + 2.5f;
 	//lightPos[2] += 0.001f;
 
 	cube.position[0] = lightPos[0];
@@ -103,7 +102,7 @@ void draw_world(void)
 	cube.angle += 0.1f;
 
 	shader_use(&lightingShader);
-	shader_uniform3f(&lightingShader, lightPos[0], lightPos[1], lightPos[2], "lightPos");
+	shader_uniform3f(&lightingShader, lightPos[0], lightPos[1], lightPos[2], "aLightPos");
 	shader_usei(0);
 
 	// Draw objects
@@ -184,12 +183,16 @@ void loop(void)
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		camera_update(&camera, &testShader);
 		camera_update(&camera, &lightingShader);
-		shader_uniform3fv(&lightingShader, &camera.position, "viewPos");
+		shader_uniform3f(&lightingShader, 
+			camera.position[0], 
+			camera.position[1], 
+			camera.position[2],
+			"viewPos");
 
 		// Calculate day/night cycle
 		if (dayNight)
 		{
-			float mul = 0.5f * sinf(0.5f * glfwGetTime()) + 0.5f;
+			float mul = 0.2f * sinf(0.5f * glfwGetTime()) + 0.5f;
 			currentColor[0] = bgColor[0] * mul;
 			currentColor[1] = bgColor[1] * mul;
 			currentColor[2] = bgColor[2] * mul;
