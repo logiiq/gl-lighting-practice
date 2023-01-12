@@ -27,7 +27,6 @@ Shader_t **shader_get_all(unsigned int *nr_shaders)
 
 void shader_free(void)
 {
-	printf("successfully freed shaders\n");
 	free(shaders);
 }
 
@@ -138,7 +137,7 @@ void shader_viewport_calc(Shader_t *shader)
 
 	float aspect = (float)width / (float)height;
 
-	glm_perspective(degToRad(90.0f), aspect, 0.001f, 100.0f, shader->proj);
+	glm_perspective(degToRad(60.0f), aspect, 0.001f, 100.0f, shader->proj);
 
 	glUseProgram(shader->id);
 	shader_mul(shader);
@@ -207,10 +206,11 @@ void shader_uniform3f(const Shader_t *shader, float v0, float v1, float v2, cons
 	glUniform3f(loc, v0, v1, v2);
 }
 
+// broken function fix later
 void shader_uniform3fv(const Shader_t *shader, const vec3 *vec, const char *uniform)
 {
 	int loc = glGetUniformLocation(shader->id, uniform);
-	glUniform3fv(loc, 3, vec);
+	glUniform3fv(loc, 1, &vec[0]);
 }
 
 void shader_uniform_mat3fv(const Shader_t *shader, mat4 *matrix, const char *uniform)

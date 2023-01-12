@@ -13,8 +13,6 @@ uniform sampler2D txSampler;
 uniform vec3 lightPos;
 uniform float ambientStrength;
 
-uniform vec3 lightColour1;
-
 void main()
 {
     // Define lighting

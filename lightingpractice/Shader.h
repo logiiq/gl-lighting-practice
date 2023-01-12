@@ -41,7 +41,7 @@ void shader_uniform1f(const Shader_t *shader, float val, const char *uniform);
 
 void shader_uniform3f(const Shader_t *shader, float v0, float v1, float v2, const char *uniform);
 
-void shader_uniform3fv(const Shader_t *shader, const vec3 *vec, const char *uniform);
+void shader_uniform3fv(const Shader_t *shader, vec3 *vec, const char *uniform);
 
 void shader_uniform_mat3fv(const Shader_t *shader, mat4 *matrix, const char *uniform);
 

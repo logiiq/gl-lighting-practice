@@ -39,7 +39,7 @@ Cube_t cube2;
 */
 void init_world(void)
 {
-	texture_t lanternOn = texture_new("texture/lanterncleannc.png", GL_TRUE, GL_RGBA);
+	texture_t lanternOn = texture_new("texture/lanternclean.png", GL_TRUE, GL_RGBA);
 	texture_t lanternOff = texture_new("texture/lanterncleanoff.png", GL_TRUE, GL_RGBA);
 	texture_t wood = texture_new("texture/wood.png", GL_TRUE, GL_RGBA);
 	texture_t stone = texture_new("texture/stone.png", GL_TRUE, GL_RGBA);
@@ -168,7 +168,7 @@ void init(void)
 
 void loop(void)
 {
-	int dayNight = 0;
+	char dayNight = 1;
 	float lightValue = 0.5f;
 	float currentLightValue = 0.0f;
 	vec3 bgColor = { 0.0f, 0.3f, 0.5f };
@@ -200,19 +200,6 @@ void loop(void)
 			shader_usei(0);
 		}
 
-		// set rgb light color
-		lightColour[0] = 0.5f * sinf(glfwGetTime()) + 0.5f;
-		lightColour[1] = 0.5f * sinf(glfwGetTime() + (2.0f * M_PI / 3)) + 0.5f;
-		lightColour[2] = 0.5f * sinf(glfwGetTime() + (4.0f * M_PI / 3)) + 0.5f;
-		shader_use(&lightingShader);
-		shader_uniform3fv(&lightingShader, &lightColour, "lightColour1");
-		shader_uniform3f(&lightingShader, lightColour[0], lightColour[1], lightColour[2], "lightColour1");
-		shader_usei(0);
-
-		shader_use(&testShader);
-		shader_uniform3fv(&lightingShader, &lightColour, "lightColour1");
-		shader_uniform3f(&testShader, lightColour[0], lightColour[1], lightColour[2], "lightColour1");
-		shader_usei(0);
 
 		draw_world();
 
@@ -223,7 +210,7 @@ void loop(void)
 		// Poll FPS
 		if (polltime >= 1.0f)
 		{
-			//printf("(DEBUG) FPS: %d\n", fps);
+			printf("(DEBUG) FPS: %d\n", fps);
 			fps = 0;
 			polltime = 0.0f;
 		}

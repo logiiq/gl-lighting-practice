@@ -29,12 +29,6 @@ Plane_t plane_new(float x, float y, float z, float scale)
 		-0.5f, 0.0f,  0.5f,	0.0f, 1.0f, 0.0f, 	0.0f,  0.0f    // bottom left
 	};
 
-	mat3 normals = {
-		0.0f, 1.0f, 0.0f,
-		0.0f, 1.0f, 0.0f,
-		0.0f, 1.0f, 0.0f,
-	};
-
 	glGenBuffers(1, &VBO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(planeverts), &planeverts, GL_STATIC_DRAW);
