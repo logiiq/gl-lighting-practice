@@ -7,13 +7,14 @@ static void calc_norm_matrix(Plane_t *plane, Shader_t *shader)
 {
 	// modelview (mul view and model mtxs to get viewspace positions of normals)
 	mat4 vm;
-	glm_mat4_mul(shader->view, plane->transform, &vm);
+	//glm_mat4_mul(plane->transform, shader->view, &vm);
 
 	// transpose of the inverse of the upper-left 3x3 of the model matrix
 	mat3 norm;
+	glm_mat3_identity(&norm);
 	glm_mat4_pick3(&vm, &norm); // put upper left into norm mtx
-	glm_mat3_inv(&norm, &norm);
 	glm_mat3_transpose(&norm);
+	glm_mat3_inv(&norm, &norm);
 	glm_mat3_copy(&norm, plane->normal_mtx);
 }
 
@@ -58,10 +59,6 @@ Plane_t plane_new(float x, float y, float z, float scale)
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(2);
 
-	mat4 transform;
-	texture_t tex = texture_new("texture/grass.png", GL_TRUE, GL_RGBA);
-	glm_mat4_identity(&transform);
-
 	Plane_t tmp;
 	tmp.position[0] = x;
 	tmp.position[1] = y;
@@ -73,27 +70,26 @@ Plane_t plane_new(float x, float y, float z, float scale)
 	tmp.axis[1] = 0.0f;
 	tmp.axis[2] = 0.0f;
 	tmp.angle = 0.0f;
+	tmp.material = material_new();
 	tmp.VAO = VAO;
-	tmp.texture = tex;
-	glm_mat4_copy(&transform, &tmp.transform);
 
 	return tmp;
 }
 
 void plane_transform(const Plane_t *plane, const Shader_t *shader)
 {
-	glm_translate(plane->transform, plane->position);
-	glm_rotate(plane->transform, glm_rad(plane->angle), plane->axis);
-	glm_scale(plane->transform, plane->scale);
+	glm_translate(&plane->transform, &plane->position);
+	glm_rotate(&plane->transform, glm_rad(plane->angle), &plane->axis);
+	glm_scale(&plane->transform, &plane->scale);
 
 	calc_norm_matrix(plane, shader);
-	shader_set_model(shader, plane->transform);
-	shader_uniform_mat4fv(shader, plane->transform, "model");
-	shader_uniform_mat3fv(shader, plane->normal_mtx, "normal_mtx");
+	shader_set_model(shader, &plane->transform);
+	shader_uniform_mat4fv(shader, &plane->transform, "model");
+	shader_uniform_mat3fv(shader, &plane->normal_mtx, "normal_mtx");
 	shader_mul(shader);
 
-	glm_mat4_identity(shader->model);
-	glm_mat4_identity(plane->transform);
+	glm_mat4_identity(&shader->model);
+	glm_mat4_identity(&plane->transform);
 }
 
 void plane_draw(const Plane_t *plane, const Shader_t *shader)
@@ -101,7 +97,7 @@ void plane_draw(const Plane_t *plane, const Shader_t *shader)
 	shader_use(shader);
 
 	plane_transform(plane, shader);
-	texture_use(plane->texture);
+	material_use(&plane->material, shader);
 	glBindVertexArray(plane->VAO);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);
 

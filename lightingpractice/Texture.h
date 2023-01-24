@@ -8,6 +8,6 @@ typedef unsigned int texture_t;
 
 texture_t texture_new(const char *path, int flip, GLint type);
 
-void texture_use(const texture_t t);
+void texture_use(const texture_t t, const unsigned int unit);
 
 #endif

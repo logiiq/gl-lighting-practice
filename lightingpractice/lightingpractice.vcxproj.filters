@@ -19,6 +19,9 @@
     <Filter Include="Resource Files\control shader">
       <UniqueIdentifier>{95f358b4-3ac7-4382-95b6-981edca11693}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Lighting">
+      <UniqueIdentifier>{5a8d5705-acd9-41eb-91ed-f443a3c917fb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="glad.c">
@@ -51,6 +54,15 @@
     <ClCompile Include="Monitor.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Light.c">
+      <Filter>Lighting</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.c">
+      <Filter>Lighting</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectionalLight.c">
+      <Filter>Lighting</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -79,6 +91,15 @@
     </ClInclude>
     <ClInclude Include="Monitor.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>Lighting</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Lighting</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectionalLight.h">
+      <Filter>Lighting</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

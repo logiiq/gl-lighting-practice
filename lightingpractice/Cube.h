@@ -4,8 +4,8 @@
 #include <glad/glad.h> 
 #include <cglm/cglm.h>
 #include "Shader.h"
-
 #include "Texture.h"
+#include "Material.h"
 
 typedef struct Cube
 {
@@ -17,9 +17,10 @@ typedef struct Cube
 	vec3 axis;
 	float angle;
 
+	Material_t material;
+
 	// GL handle
 	int VAO;
-	texture_t texture;
 } Cube_t;
 
 static float cube_verts[] = {
@@ -71,6 +72,6 @@ static unsigned int cube_indices[] = {
 
 Cube_t cube_new(float x, float y, float z);
 
-void cube_draw(Cube_t *cube, const Shader_t *shader);
+void cube_draw(const Cube_t *cube, const Shader_t *shader);
 
 #endif

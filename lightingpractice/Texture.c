@@ -15,7 +15,7 @@ texture_t texture_new(const char *path, int flip, GLint type)
 	glBindTexture(GL_TEXTURE_2D, id);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
@@ -31,7 +31,8 @@ texture_t texture_new(const char *path, int flip, GLint type)
 	return id;
 }
 
-void texture_use(const texture_t t)
+void texture_use(const texture_t t, const unsigned int unit)
 {
+	glActiveTexture(unit);
 	glBindTexture(GL_TEXTURE_2D, t);
 }

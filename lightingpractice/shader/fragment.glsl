@@ -1,4 +1,4 @@
-#version 400 core
+#version 460 core
 out vec4 FragColor;
 
 in vec2 texPos;
@@ -16,7 +16,7 @@ void main()
     }
     else
     {
-        result = vec4(0.3f, 0.2f, 0.1f, 1.0f);
+        result = vec4(0.3f, 0.2f, 0.1f, 0.3f);
     }
 
     FragColor = result;

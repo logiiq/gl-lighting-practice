@@ -4,6 +4,7 @@
 #include <cglm/cglm.h>
 #include "Shader.h"
 #include "Texture.h"
+#include "Material.h"
 
 typedef struct Plane
 {
@@ -13,12 +14,12 @@ typedef struct Plane
 	vec3 axis;
 	mat4 transform;
 	mat3 normal_mtx;
-
 	float angle;
+
+	Material_t material;
 
 	// GL handles
 	unsigned int VAO;
-	texture_t texture;
 } Plane_t;
 
 // ccw winding

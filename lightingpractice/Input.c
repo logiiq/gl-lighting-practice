@@ -14,7 +14,7 @@ static float mvSpeed;
 static int mlock = 1; // disable mouse by default
 
 // Callback prototypes
-static void calc_offset(void);
+static void calc_moffset(void);
 static void keycallback(GLFWwindow *window, int scancode, int action, int key, int mods);
 static void mposcallback(GLFWwindow *window, double xpos, double ypos);
 static void mbuttoncallback(GLFWwindow *window, int button, int action);
@@ -58,33 +58,26 @@ void input_init(void)
 
 void input_process(void)
 {
-	calc_offset();
+	calc_moffset();
 
 	mvSpeed = spd * time_deltaTimef();
-
-	/*
-	if (glfwGetKey(getWindow(), GLFW_KEY_A) == GLFW_PRESS)
-	{
-		camera_left(getCamera(), mvSpeed);
-	}
-	*/
 
 	if (input_keydown('A'))
 	{
 		camera_left(getCamera(), mvSpeed);
 	}
 
-	if (glfwGetKey(getWindow(), GLFW_KEY_D) == GLFW_PRESS)
+	if (glfwGetKey(getWindow(), 'D') == GLFW_PRESS)
 	{
 		camera_right(getCamera(), mvSpeed);
 	}
 
-	if (glfwGetKey(getWindow(), GLFW_KEY_W) == GLFW_PRESS)
+	if (glfwGetKey(getWindow(), 'W') == GLFW_PRESS)
 	{
 		camera_forward(getCamera(), mvSpeed);
 	}
 
-	if (glfwGetKey(getWindow(), GLFW_KEY_S) == GLFW_PRESS)
+	if (glfwGetKey(getWindow(), 'S') == GLFW_PRESS)
 	{
 		camera_backward(getCamera(), mvSpeed);
 	}
@@ -131,7 +124,7 @@ static void mposcallback(GLFWwindow *window, double xpos, double ypos)
 	m_pos[1] = (float) ypos;
 }
 
-static void calc_offset(void)
+static void calc_moffset(void)
 {
 	m_off[0] = sens * ((float)m_pos[0] - oldX);
 	m_off[1] = sens * (oldY - (float)m_pos[1]);

@@ -144,9 +144,12 @@
   <ItemGroup>
     <ClCompile Include="Camera.c" />
     <ClCompile Include="Cube.c" />
+    <ClCompile Include="DirectionalLight.c" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="Input.c" />
+    <ClCompile Include="Light.c" />
     <ClCompile Include="Main.c" />
+    <ClCompile Include="Material.c" />
     <ClCompile Include="Monitor.c" />
     <ClCompile Include="Plane.c" />
     <ClCompile Include="Shader.c" />
@@ -156,7 +159,10 @@
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Cube.h" />
+    <ClInclude Include="DirectionalLight.h" />
     <ClInclude Include="Input.h" />
+    <ClInclude Include="Light.h" />
+    <ClInclude Include="Material.h" />
     <ClInclude Include="Monitor.h" />
     <ClInclude Include="Plane.h" />
     <ClInclude Include="Shader.h" />

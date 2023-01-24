@@ -212,20 +212,19 @@ void shader_uniform3f(const Shader_t *shader, float v0, float v1, float v2, cons
 	glUniform3f(loc, v0, v1, v2);
 }
 
-// broken function fix later
 void shader_uniform3fv(const Shader_t *shader, const vec3 *vec, const char *uniform)
 {
 	int loc = glGetUniformLocation(shader->id, uniform);
-	glUniform3fv(loc, 1, &vec[0]);
+	glUniform3fv(loc, 1, vec);
 }
 
-void shader_uniform_mat3fv(const Shader_t *shader, mat4 *matrix, const char *uniform)
+void shader_uniform_mat3fv(const Shader_t *shader, const mat3 *matrix, const char *uniform)
 {
 	int loc = glGetUniformLocation(shader->id, uniform);
 	glUniformMatrix3fv(loc, 1, GL_FALSE, matrix);
 }
 
-void shader_uniform_mat4fv(const Shader_t *shader, mat4 *matrix, const char *uniform)
+void shader_uniform_mat4fv(const Shader_t *shader, const mat4 *matrix, const char *uniform)
 {
 	int loc = glGetUniformLocation(shader->id, uniform); // returns -1 on failure
 	if (loc != -1)

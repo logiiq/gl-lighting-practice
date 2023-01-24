@@ -1,6 +1,5 @@
 #include "Camera.h"
 #include <math.h>
-//#include <corecrt_math_defines.h>
 
 const float *get_m_off(void);
 
@@ -48,13 +47,13 @@ static void update_direction(Camera_t *cam)
 	cam->direction[0] = (float) (cos(toRad(cam->yaw)) * cos(toRad(cam->pitch)));
 	cam->direction[2] = (float) (sin(toRad(cam->yaw)) * cos(toRad(cam->pitch)));
 	cam->direction[1] = (float) (sin(toRad(cam->pitch)));
-	glm_normalize(cam->direction);
+	glm_normalize(&cam->direction);
 
-	glm_cross(worldUp, cam->direction, cam->right);
-	glm_normalize(cam->right);
+	glm_cross(&worldUp, &cam->direction, &cam->right);
+	glm_normalize(&cam->right);
 
-	glm_cross(cam->direction, cam->right, cam->up);
-	glm_normalize(cam->up);
+	glm_cross(&cam->direction, &cam->right, &cam->up);
+	glm_normalize(&cam->up);
 }
 
 void camera_update(Camera_t *cam, Shader_t *shader)
@@ -68,19 +67,14 @@ void camera_update(Camera_t *cam, Shader_t *shader)
 	cam->pitch += m_off[1];
 
 	vec3 d = {0.0f, 0.0f, 0.0f};
-	glm_vec3_add(cam->direction, cam->position, &d);
+	glm_vec3_add(&cam->direction, &cam->position, &d);
 
-	glm_lookat(cam->position, &d, cam->up, shader->view);
-	shader_uniform3f(shader, cam->position[0], cam->position[1], cam->position[2], "viewPos");
-	shader_uniform_mat4fv(shader, shader->view, "view");
+	glm_lookat(&cam->position, &d, &cam->up, &shader->view);
+	shader_uniform3fv(shader, &cam->position, "viewPos");
+	shader_uniform_mat4fv(shader, &shader->view, "view");
 
 	shader_mul(shader);
 	shader_usei(0);
-}
-
-void camera_rot(Camera_t *cam, float speed)
-{
-	cam->yaw += speed;
 }
 
 void camera_up(Camera_t *cam, float speed)
@@ -95,59 +89,20 @@ void camera_down(Camera_t *cam, float speed)
 
 void camera_forward(Camera_t *cam, float speed)
 {
-	vec3 dir = {0.0f, 0.0f, 0.0f};
-	glm_vec3_copy(cam->direction, &dir);
-
-	float *p = &dir;
-	for (int i = 0; i < 3; i++, p++)
-	{
-		*p *= speed;
-	}
-
-	glm_vec3_add(cam->position, &dir, cam->position);
+	glm_vec3_muladds(&cam->direction, speed, &cam->position);
 }
 
 void camera_backward(Camera_t *cam, float speed)
 {
-	vec3 dir = {0.0f, 0.0f, 0.0f};
-	glm_vec3_copy(cam->direction, &dir);
-
-	float *p = &dir;
-
-	for (int i = 0; i < 3; i++, p++)
-	{
-		*p *= speed;
-	}
-
-	glm_vec3_sub(cam->position, &dir, cam->position);
+	glm_vec3_muladds(&cam->direction, -speed, &cam->position);
 }
 
 void camera_left(Camera_t *cam, float speed)
 {
-	vec3 dir = {0.0f, 0.0f, 0.0f};
-	glm_vec3_copy(cam->right, &dir); // copy vec to preserve cam right
-
-	float *p = &dir;
-
-	for (int i = 0; i < 3; i++, p++)
-	{
-		*p *= speed;
-	}
-
-	glm_vec3_add(cam->position, &dir, cam->position);
+	glm_vec3_muladds(&cam->right, speed, &cam->position);
 }
 
 void camera_right(Camera_t *cam, float speed)
 {
-	vec3 dir = {0.0f, 0.0f, 0.0f};
-	glm_vec3_copy(cam->right, &dir);
-
-	float *p = &dir;
-
-	for (int i = 0; i < 3; i++, p++)
-	{
-		*p *= speed;
-	}
-
-	glm_vec3_sub(cam->position, &dir, cam->position);
+	glm_vec3_muladds(&cam->right, -speed, &cam->position);
 }
