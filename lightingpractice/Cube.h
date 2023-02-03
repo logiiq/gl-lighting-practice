@@ -72,6 +72,14 @@ static unsigned int cube_indices[] = {
 
 Cube_t cube_new(float x, float y, float z);
 
+void cube_pos(Cube_t *cube, float x, float y, float z);
+
+void cube_posv(Cube_t *cube, vec3 *position);
+
+void cube_scale(Cube_t *cube, float scalar);
+
+void cube_axis(Cube_t *cube, float x, float y, float z);
+
 void cube_draw(const Cube_t *cube, const Shader_t *shader);
 
 #endif

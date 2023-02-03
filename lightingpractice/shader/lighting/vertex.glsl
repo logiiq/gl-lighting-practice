@@ -19,7 +19,7 @@ void main()
 {
     gl_Position = finalMat * vec4(aPos, 1.0f);
     fragPos = vec3(view * model * vec4(aPos, 1.0f)); // transform fragment to viewspace
-    //normPos = normal_mtx * aNormal;
-    normPos = mat3(transpose(inverse(view * model))) * aNormal; // debug
+    normPos = normal_mtx * aNormal;
+    //normPos = mat3(transpose(inverse(view * model))) * aNormal; // debug
     texPos = aTexturePos;
 }

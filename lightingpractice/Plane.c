@@ -8,6 +8,7 @@ static void calc_norm_matrix(Plane_t *plane, Shader_t *shader)
 	// modelview (mul view and model mtxs to get viewspace positions of normals)
 	mat4 vm;
 	//glm_mat4_mul(plane->transform, shader->view, &vm);
+	glm_mat4_mul(shader->view, plane->transform, &vm);
 
 	// transpose of the inverse of the upper-left 3x3 of the model matrix
 	mat3 norm;

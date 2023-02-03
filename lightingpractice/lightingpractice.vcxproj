@@ -147,7 +147,8 @@
     <ClCompile Include="DirectionalLight.c" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="Input.c" />
-    <ClCompile Include="Light.c" />
+    <ClCompile Include="LightManager.c" />
+    <ClCompile Include="PointLight.c" />
     <ClCompile Include="Main.c" />
     <ClCompile Include="Material.c" />
     <ClCompile Include="Monitor.c" />
@@ -161,7 +162,8 @@
     <ClInclude Include="Cube.h" />
     <ClInclude Include="DirectionalLight.h" />
     <ClInclude Include="Input.h" />
-    <ClInclude Include="Light.h" />
+    <ClInclude Include="LightManager.h" />
+    <ClInclude Include="PointLight.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Monitor.h" />
     <ClInclude Include="Plane.h" />

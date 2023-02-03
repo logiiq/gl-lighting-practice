@@ -11,7 +11,8 @@
 #include "Time.h"
 
 // Lighting
-#include "Light.h"
+#include "LightManager.h"
+#include "PointLight.h"
 #include "DirectionalLight.h"
 #include "Material.h"
 
@@ -26,7 +27,8 @@ Shader_t testShader;
 Shader_t lightingShader;
 
 // Lights
-Light_t light;
+PointLight_t light;
+PointLight_t light2;
 
 // Game objects
 Plane_t groundPlane;
@@ -58,10 +60,19 @@ void init_world(void)
 	texture_t lanternOff = texture_new("texture/lanterncleanoff.png", GL_TRUE, GL_RGBA);
 	texture_t wood = texture_new("texture/wood.png", GL_TRUE, GL_RGBA);
 	texture_t stone = texture_new("texture/stone.png", GL_TRUE, GL_RGBA);
-	light = light_new(0.0f, 0.0f, 0.0f);
-	light_ambient(&light, 0.2f, 0.2f, 0.2f);
-	light_diffuse(&light, 1.0f, 1.0f, 1.0f);
 
+	light = light_new(0.0f, 0.0f, 0.0f);
+	light_point_ambient(&light, 0.2f, 0.2f, 0.2f);
+	light_point_diffuse(&light, 1.0f, 1.0f, 1.0f);
+	lightman_add_point(&light);
+
+	/*
+	light2 = light_new(0.0f, 0.0f, 0.0f);
+	light_point_ambient(&light2, 0.2f, 0.2f, 0.2f);
+	light_point_diffuse(&light2, 0.0f, 1.0f, 0.0f);
+	light_point_specular(&light2, 0.0f, 1.0f, 0.0f);
+	//lightman_add_point(&light2);
+	*/
 	
 	wall1 = plane_new(-10.0f, 0.0f, 0.0f, 20.0f);
 	wall1.axis[2] = 1.0f;
@@ -93,11 +104,16 @@ void init_world(void)
 
 	cube = cube_new(-1.5f, 0.0f, 0.0f);
 	material_diffuse(&cube.material, lanternOn);
+	material_specular(&cube.material, 0.5f, 0.5f, 0.5f);
+	material_shininess(&cube.material, 128.0f);
 
 	cube2 = cube_new(1.5f, 0.0f, 0.0f);
 	material_diffuse(&cube2.material, lanternOff);
 	material_specular(&cube2.material, 0.5f, 0.5f, 0.5f);
 	material_shininess(&cube2.material, 128.0f);
+
+	// set rosie
+
 }
 
 float spd = 0.001f;
@@ -112,13 +128,19 @@ void draw_world(void)
 	light.position[1] = 2.0f * sinf(0.5f * glfwGetTime()) + 2.5f;
 	light.position[2] = 2.0f;
 
-	cube.position[0] = light.position[0];
-	cube.position[1] = light.position[1];
-	cube.position[2] = light.position[2];
+	cube_posv(&cube, &light.position);
 
 	cube.axis[0] = 1.0f;
 	cube.axis[1] = 1.0f;
-	cube.angle += 0.1f;
+	cube.angle += 0.5f;
+
+	light2.position[0] = -light.position[0];
+	light2.position[1] = light.position[1];
+	light2.position[2] = -light.position[2];
+
+	cube_posv(&cube2, &light2.position);
+	cube_axis(&cube2, 1.0f, 1.0f, 0.0f);
+	cube2.angle += 0.1f;
 
 	shader_use(&lightingShader);
 	shader_uniform3fv(&lightingShader, &light.position, "aLightPos");
@@ -167,7 +189,7 @@ void init(void)
 	glfwSwapInterval(0);
 	glViewport(0, 0, 1920, 1080);
 	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);
+	//glEnable(GL_CULL_FACE);
 
 	testShader = shader_new("shader/vertex.glsl", "shader/fragment.glsl");
 	shader_init(&testShader);
@@ -196,6 +218,7 @@ void loop(void)
 	vec3 lightDir = { -0.5f, -1.0f, 0.0f };
 
 	DirectionalLight_t dirLight = light_directional_new(0.5f, -0.73f, -0.32f);
+	lightman_set_directional(&dirLight);
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -204,6 +227,7 @@ void loop(void)
 		camera_update(&camera, &testShader);
 		camera_update(&camera, &lightingShader);
 		shader_uniform3fv(&lightingShader, camera.position, "viewPos");
+		lightman_update(&lightingShader);
 
 		// Calculate day/night cycle
 		if (dayNight)
@@ -216,10 +240,10 @@ void loop(void)
 			light_directional_ambient(&dirLight, 0.3f * mul, 0.3f * mul, 0.3f * mul);
 			light_directional_diffuse(&dirLight, 0.3f * mul, 0.3f * mul, 0.3f * mul);
 			light_directional_specular(&dirLight, 0.3f * mul, 0.3f * mul, 0.3f * mul);
-			light_directional_update(&dirLight, &lightingShader);
+			//light_directional_update(&dirLight, &lightingShader);
 		}
 
-		light_update(&light, &lightingShader);
+		//light_point_update(&light, &lightingShader);
 		draw_world();
 
 		glfwSwapBuffers(window);

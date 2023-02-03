@@ -54,13 +54,16 @@
     <ClCompile Include="Monitor.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Light.c">
+    <ClCompile Include="PointLight.c">
       <Filter>Lighting</Filter>
     </ClCompile>
     <ClCompile Include="Material.c">
       <Filter>Lighting</Filter>
     </ClCompile>
     <ClCompile Include="DirectionalLight.c">
+      <Filter>Lighting</Filter>
+    </ClCompile>
+    <ClCompile Include="LightManager.c">
       <Filter>Lighting</Filter>
     </ClCompile>
   </ItemGroup>
@@ -92,13 +95,16 @@
     <ClInclude Include="Monitor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Light.h">
+    <ClInclude Include="PointLight.h">
       <Filter>Lighting</Filter>
     </ClInclude>
     <ClInclude Include="Material.h">
       <Filter>Lighting</Filter>
     </ClInclude>
     <ClInclude Include="DirectionalLight.h">
+      <Filter>Lighting</Filter>
+    </ClInclude>
+    <ClInclude Include="LightManager.h">
       <Filter>Lighting</Filter>
     </ClInclude>
   </ItemGroup>

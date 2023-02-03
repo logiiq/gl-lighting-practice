@@ -101,7 +101,7 @@ Shader_t shader_new(const char *vpath, const char *fpath)
 		}
 		else
 		{
-			printf("ERROR: Unable to malloc for shaders\n");
+			printf("ERROR: Unable to malloc for shader reference array\n");
 			free(shaders);
 			shaders = NULL;
 		}
@@ -159,6 +159,7 @@ void shader_init(Shader_t *shader)
 		if (shaders[i] == NULL)
 		{
 			shaders[i] = shader;
+			break;
 		}
 	}
 }

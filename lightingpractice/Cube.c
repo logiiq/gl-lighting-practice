@@ -12,7 +12,8 @@ static void calc_norm_matrix(Cube_t *cube, Shader_t *shader)
 {
 	// modelview (mul view and model mtxs to get viewspace positions of normals)
 	mat4 vm;
-	glm_mat4_mul(cube->transform, shader->view, &vm);
+	//glm_mat4_mul(cube->transform, shader->view, &vm);
+	glm_mat4_mul(shader->view, cube->transform, &vm);
 
 	// transpose of the inverse of the upper-left 3x3 of the model matrix
 	mat3 norm;
@@ -57,15 +58,9 @@ Cube_t cube_new(float x, float y, float z)
 	glDisableVertexAttribArray(2);
 
 	Cube_t tmp;
-	tmp.position[0] = x;
-	tmp.position[1] = y;
-	tmp.position[2] = z;
-	tmp.scale[0] = 1.0f;
-	tmp.scale[1] = 1.0f;
-	tmp.scale[2] = 1.0f;
-	tmp.axis[0] = 0.0f;
-	tmp.axis[1] = 0.0f;
-	tmp.axis[2] = 0.0f;
+	cube_pos(&tmp, x, y, z);
+	cube_scale(&tmp, 1.0f);
+	cube_axis(&tmp, 0.0f, 0.0f, 0.0f);
 	tmp.angle = 0.0f;
 	tmp.material = material_new();
 	tmp.VAO = VAO;
@@ -73,17 +68,34 @@ Cube_t cube_new(float x, float y, float z)
 	return tmp;
 }
 
-void cube_set_scale(Cube_t *cube, float scalar)
+void cube_pos(Cube_t *cube, float x, float y, float z)
 {
-	cube->scale[0] = scalar;
-	cube->scale[1] = scalar;
-	cube->scale[2] = scalar;
+	cube->position[0] = x;
+	cube->position[1] = y;
+	cube->position[2] = z;
+}
+
+void cube_posv(Cube_t *cube, vec3 *position)
+{
+	glm_vec3_copy(position, cube->position);
+}
+
+void cube_scale(Cube_t *cube, float scalar)
+{
+	glm_vec3_fill(cube->scale, scalar);
+}
+
+void cube_axis(Cube_t *cube, float x, float y, float z)
+{
+	cube->axis[0] = x;
+	cube->axis[1] = y;
+	cube->axis[2] = z;
 }
 
 void cube_transform(const Cube_t *cube, Shader_t *shader)
 {
 	glm_translate(&cube->transform, &cube->position);
-	glm_rotate(cube->transform, glm_rad(cube->angle), cube->axis);
+	glm_rotate(&cube->transform, glm_rad(cube->angle), &cube->axis);
 	glm_scale(&cube->transform, cube->scale);
 
 	calc_norm_matrix(cube, shader);
